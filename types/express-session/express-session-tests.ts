@@ -106,12 +106,12 @@ class MyStore extends Store {
         const sessionString: string | undefined = this.sessions[sid];
         const sessionData: SessionData | null = sessionString ? JSON.parse(sessionString) : null;
         callback(null, sessionData);
-    }
+    };
 
     set = (sid: string, session: SessionData, callback?: (err?: any) => void): void => {
         this.sessions[sid] = JSON.stringify(session);
         if (callback) callback();
-    }
+    };
 
     touch = (sid: string, session: SessionData, callback?: (err?: any) => void) => {
         const currentSession = this.sessions[sid];
@@ -123,7 +123,15 @@ class MyStore extends Store {
             this.sessions[sid] = JSON.stringify(sessionData);
         }
         if (callback) callback();
-    }
+    };
+
+    length = (callback?: (err?: any, length?: number) => void) => {
+        if (this.sessions == null && callback) {
+            callback(new Error('error to show that length is optional'));
+        }
+
+        if (callback) callback(null, Object.keys(this.sessions).length);
+    };
 
     length = (callback?: (err?: any, length?: number) => void) => {
         if (this.sessions == null && callback) {
@@ -137,7 +145,7 @@ class MyStore extends Store {
         this.sessions[sid] = undefined;
         this.sessions = JSON.parse(JSON.stringify(this.sessions));
         if (callback) callback();
-    }
+    };
 }
 
 app.use(
